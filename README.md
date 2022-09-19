@@ -2,6 +2,8 @@
 
 This is a carbon copy of Child Mackenzie Reddit clone tutorial. This readme is to capture the differences in its creation since the original tutorial was created. This included starting with a PostgreSQL database and using Bulma as the CSS framework.
 
+**NOTE** create a seed file to generate a test_user with login credentials
+
 Start a new rails app with the following commands
 
 ```
@@ -267,3 +269,178 @@ FYI, if you like to keep a clean workspace, you can always clear the terminal wi
 ```
 clear
 ```
+
+Now we are going to commit our changes:
+
+```
+git status
+```
+
+then
+
+```
+git add .
+```
+
+then
+
+```
+git commit -m "Added devise gem and User model"
+```
+
+Now we can sign in and out, but we need to update our view files so that we have some accessible links on the home page. We don’t want users to have to know to navigate to http://localhost:3000/sign_up do we?
+
+Now, in our app/views/layouts/application.html.erb file, we are going to add a conditional statement to serve different links depending on whether the user is signed in or not:
+
+```ruby
+<% if user_signed_in? %>
+    <ul>
+     <li><%= link_to 'Submit link', new_link_path %></li>
+     <li><%= link_to 'Account', edit_user_registration_path %></li>
+     <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
+    </ul>
+   <% else %>
+    <ul>
+     <li><%= link_to 'Sign up', new_user_registration_path%></li>
+     <li><%= link_to 'Sign in', new_user_session_path %></li>
+    </ul>
+   <% end %>
+```
+
+The whole code block will look like this before:
+
+```ruby
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redditclone</title>
+    <%= csrf_meta_tags %>
+<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+<body>
+   <% flash.each do |name, msg| %>
+    <%= content_tag(:div, msg, class: "alert alert-#{name}") %>
+   <% end %>
+<%= yield %>
+  </body>
+</html>
+```
+
+And this, after:
+
+```ruby
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redditclone</title>
+    <%= csrf_meta_tags %>
+<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+<body>
+   <% flash.each do |name, msg| %>
+    <%= content_tag(:div, msg, class: "alert alert-#{name}") %>
+   <% end %>
+<% if user_signed_in? %>
+    <ul>
+     <li><%= link_to 'Submit link', new_link_path %></li>
+     <li><%= link_to 'Account', edit_user_registration_path %></li>
+     <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
+    </ul>
+   <% else %>
+    <ul>
+     <li><%= link_to 'Sign up', new_user_registration_path%></li>
+     <li><%= link_to 'Sign in', new_user_session_path %></li>
+    </ul>
+   <% end %>
+<%= yield %>
+  </body>
+</html>
+```
+
+Don’t forget to save your file.
+
+start the server
+
+```
+rails server
+
+```
+
+Test to ensure you can logout.
+
+---
+
+**NOTE:**
+Devise is configured to use the http method `:delete` to sign out. But when using the code from above specifically
+
+```ruby
+<li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
+```
+
+This can work if we replace `link_to` with `button_to` in the application view.
+
+Another option is to keep 'link_to' but instead we updated the devise config file
+`config/initializers/devise.rb`. Search for `config.sign_out_via =` and replace ``:delete` with `:get`
+
+---
+
+let lets commit our work so far
+
+```
+git add .
+git commit -m "added conditional statement to change view based on if a user is signed in"
+```
+
+Next we are going to create an associate between user and links to make sure that unregistered users can’t navigate to the url for submit link and submit a link. Because as it stands, a non-registered user could do that; they’d just need to know the url path.
+
+Head to the user model at `app/models/user.rb` and add
+
+```ruby
+has_many :links
+```
+
+Before:
+
+```ruby
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+end
+```
+
+After:
+
+```ruby
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+  has_many :links
+end
+```
+
+And then we will add an association to the link.rb file:
+
+```ruby
+belongs_to :user
+```
+
+Before:
+
+```ruby
+class Link < ApplicationRecord
+end
+```
+
+```ruby
+class Link < ApplicationRecord
+  belongs_to :user
+end
+```
+
+Then we are going to get back into the rails console to inspect our work.

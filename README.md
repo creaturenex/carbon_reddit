@@ -59,3 +59,18 @@ And then let’s run the rails server to check out our work:
 ```
 rails server
 ```
+
+Create a new link to test that everything is working.
+
+Excellent. Everything is functioning.
+
+Next we will commit our changes and merge our git branch into the git master branch:
+
+Kill the server: ctrl + c. Then execute each git command individually in your terminal. Write it out rather than copy/paste; you’ll want to commit these commands to memory.
+
+git status
+git add .
+git commit -m "generated link scaffold"
+git checkout main
+git merge feature/link_scaffold
+git push

@@ -391,6 +391,7 @@ let lets commit our work so far
 ```
 git add .
 git commit -m "added conditional statement to change view based on if a user is signed in"
+git push
 ```
 
 Next we are going to create an associate between user and links to make sure that unregistered users can’t navigate to the url for submit link and submit a link. Because as it stands, a non-registered user could do that; they’d just need to know the url path.
@@ -444,3 +445,67 @@ end
 ```
 
 Then we are going to get back into the rails console to inspect our work.
+
+```
+rails c
+```
+
+We are going to ask the rails console what the first link is:
+
+```
+@link = Link.first
+```
+
+Then let’s ask the console what user submitted this link:
+
+```
+@link.user
+```
+
+The console returns `=> nil`
+
+Without this association that we just made between users and links, we would have been shown an error message for the query `“@link.user”`
+
+Don’t mistake `“nil”` for an error. This isn’t technically an error, it just means that we haven’t added a user column to our database. Let’s do that now.
+
+Exit the console with control + d.
+
+We are going to run a migration to add users to the links database:
+
+```
+rails g migration add_user_id_to_links user_id:integer:index
+```
+
+then run:
+
+```
+rails db:migrate
+```
+
+Now we are going to get back into the rails console to confirm our work:
+
+```
+rails c
+```
+
+First we do:
+
+```
+Link.connection
+```
+
+And we get a bunch of gobbleygook, and then we do:
+
+```
+Link
+```
+
+And see:
+
+`=> Link(id: integer, title: string, url: string, created_at: datetime, updated_at: datetime, user_id: integer)`
+
+The id integer is there! Success.
+
+Exit the console; control + d
+
+Commit your work

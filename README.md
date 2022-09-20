@@ -384,7 +384,7 @@ This can work if we replace `link_to` with `button_to` in the application view.
 Another option is to keep 'link_to' but instead we updated the devise config file
 `config/initializers/devise.rb`. Search for `config.sign_out_via =` and replace ``:delete` with `:get`
 
----
+## see issue https://github.com/heartcombo/devise/issues/4486
 
 let lets commit our work so far
 
@@ -509,3 +509,301 @@ The id integer is there! Success.
 Exit the console; control + d
 
 Commit your work
+
+```
+git status
+```
+
+then
+
+```
+git add .
+```
+
+then
+
+```
+git commit -m "add association between link and user"
+```
+
+Next, we are going to update our link controller so that when a user submits a link, their user id gets assigned to that link.
+
+We are going to update the new and create methods inside the `app/controller/links_controller.rb`
+
+New method before:
+
+```ruby
+def new
+  @link = Link.new
+end
+```
+
+New method after:
+
+```ruby
+def new
+  @link = current_user.links.build
+end
+```
+
+**NOTE** explain what is happening here ie current_user. links and build
+
+Create method before:
+
+```ruby
+def create
+  @link = Link.new(link_params)
+  respond_to do |format|
+    if @link.save
+      format.html { redirect_to @link, notice: 'Link was successfully created.' }
+      format.json { render :show, status: :created, location: @link }
+    else
+      format.html { render :new }
+      format.json { render json: @link.errors, status: :unprocessable_entity }
+    end
+  end
+end
+```
+
+Create method after:
+
+```ruby
+
+def create
+  @link = current_user.links.build(link_params)
+  respond_to do |format|
+    if @link.save
+      format.html { redirect_to @link, notice: 'Link was successfully created.' }
+      format.json { render :show, status: :created, location: @link }
+    else
+      format.html { render :new }
+      format.json { render json: @link.errors, status: :unprocessable_entity }
+    end
+  end
+end
+```
+
+Save the file!
+
+Let’s confirm that this worked. Add a new link, and….
+
+Huzzah! Let’s get back into the rails console to check our work.
+
+```ruby
+rails c
+```
+
+Then:
+
+```ruby
+@link = Link.last
+```
+
+Great! user_id: 1 submitted this last link. That was me (you). Now let’s check in on user_id: 1
+
+```ruby
+@link.user
+```
+
+Cool. Everything is working.
+
+Authentication
+
+Now we will add some authentication to our control to make sure users stay within their lanes.
+
+First, we will add a before filter to our `links_controller.rb:`
+
+```ruby
+before_filter :authenticate_user!, except: [:index, :show]
+```
+
+We’ll add it right there at the top. Before:
+
+```ruby
+class LinksController < ApplicationController
+  before_action :set_link, only: [:show, :edit, :update, :destroy]
+```
+
+After:
+
+```ruby
+class LinksController < ApplicationController
+  before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
+```
+
+---
+
+**NOTE**
+explain the chage in format from [:index] to %i [ index ]
+
+---
+
+To test this, let’s log out and check out the site and see if we can delete a link.
+
+Hooray I was able to add a link and delete
+
+Moving on. Links are still showing even if we aren’t signed in. Let’s change that.
+
+Go to `app/views/links/index.html.erb`. We are going to wrap the ‘Edit’ path in an if block so that a user cannot see the edit path IF they are not signed in.
+
+That block of code will look like this:
+
+```ruby
+<% if link.user == current_user %>
+  <td><%= link_to 'Edit', edit_link_path(link) %></td>
+  <td><%= link_to 'Destroy', link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+<% end %>
+```
+
+Whole page before:
+
+```ruby
+<p id="notice"><%= notice %></p>
+<h1>Links</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Url</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+<tbody>
+    <% @links.each do |link| %>
+      <tr>
+        <td><%= link.title %></td>
+        <td><%= link.url %></td>
+        <td><%= link_to 'Show', link %></td>
+        <td><%= link_to 'Edit', edit_link_path(link) %></td>
+        <td><%= link_to 'Destroy', link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+<%= link_to 'New Link', new_link_path %>
+```
+
+Whole page after:
+
+```ruby
+<p id="notice"><%= notice %></p>
+<h1>Links</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Url</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+<tbody>
+    <% @links.each do |link| %>
+      <tr>
+        <td><%= link.title %></td>
+        <td><%= link.url %></td>
+        <td><%= link_to 'Show', link %></td>
+        <% if link.user == current_user %>
+          <td><%= link_to 'Edit', edit_link_path(link) %></td>
+          <td><%= link_to 'Destroy', link, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+<%= link_to 'New Link', new_link_path %>
+```
+
+Alright! Let’s start out server and test out our change:
+
+rails server
+Got to: http://localhost:3000/ and sign out. Refresh the page.
+
+## >>>>>
+
+It looks like this worked for the third link, but not for the first two. This is
+because we told our app to show the Edit and Destroy buttons only if the
+link.user == current user. But, we created the first two links before we added a
+user column to the database. So, the code we wrote won’t work for those first two
+links.
+
+Let’s sign in and create a new link just to test out our theory:
+image
+
+Yay. You can see that we cannot edit or destroy those first two links because we
+did not create them (technically, no one did, according to the database). We DID
+create the third link, however, and we are allowed to destroy it.
+
+Let’s get into the console and confirm our theory.
+
+```
+rails c
+```
+
+then:
+
+```
+@link = Link.first
+```
+
+then:
+
+```
+@link = Link.second
+```
+
+See! You see the user_id for both of these links is set to “nil”.
+
+We can update the database to show that the first user did indeed create these links.
+
+First:
+
+```
+@link = Link.first
+```
+
+then
+
+```
+@link.user = User.first
+```
+
+then
+
+```
+@link.save
+```
+
+then
+
+```
+@link = Link.second
+```
+
+then
+
+```
+@link.user = User.first
+```
+
+then
+
+```
+@link.save
+```
+
+Ok, restart your server and refresh your page.
+
+Huzzah!
+
+Next, we will make sure you are signed in before you can submit a new link.
+Right now, you can submit a new link even if you are signed out. See?
+
+Under: `app/views/links/index.html.erb` just simply delete the following at the
+bottom of the page:
+
+```
+<%= link_to 'New Link', new_link_path %>
+```

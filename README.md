@@ -807,3 +807,65 @@ bottom of the page:
 ```
 <%= link_to 'New Link', new_link_path %>
 ```
+
+Now it’s time for a git commit!
+
+```
+git status
+git add .
+git commit -m "authorization on links"
+git checkout main
+git merge feature/add_users
+git push
+```
+
+Lovely. Now it’s time to add bootstrap and start styling a bit.
+
+## Styling
+
+When we created the new rails app with the flag `rails new app_name -c=bulma`
+this added the bulma framework to the app via yarn and is in the `node_modules/bulma` folder
+
+All the relevant css files are already configured, we just to style the views we want to see.
+
+We are going to be editing the application view to add a navbar. But all that
+styling add a lot of text to the application view which can cause it to become
+visually cluttered.
+
+So we are going to use what is called a partial view in
+`app/views/layouts/application.html.erb` add the following:
+
+```ruby
+<%= render partial: "shared/navbar" %>
+
+```
+
+Before:
+
+```ruby
+  <body>
+    <% flash.each do |name, msg| %>
+```
+
+After:
+
+```ruby
+  <body>
+    <%= render partial: "shared/navbar" %>
+
+    <% flash.each do |name, msg| %>
+```
+
+Next create the directory `/shared/` inside the `app/layouts` folder
+Then create the file `_navbar.html.erb` pay attention to the underscore at the start
+this denotes a partial view.
+
+Inside the `\_navbar.html.erb` paste the following
+
+We are using this format over conventional rails
+
+`<li><%= link_to 'Sign up', new_user_registration_path %></li>`
+
+because bulma is not styling the link like we want it to look like
+
+`<a class="button is-primary" href="<%= new_link_path %>" >`

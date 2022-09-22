@@ -1,6 +1,9 @@
 # README
 
-This is a carbon copy of Child Mackenzie Reddit clone tutorial. This readme is to capture the differences in its creation since the original tutorial was created. This included starting with a PostgreSQL database and using Bulma as the CSS framework.
+This is a carbon copy of Child Mackenzie Reddit clone tutorial. This readme is
+to capture the differences in its creation since the original tutorial was
+created. This included starting with a PostgreSQL database and using Bulma as
+the CSS framework.
 
 **NOTE** create a seed file to generate a test_user with login credentials
 
@@ -10,7 +13,10 @@ Start a new rails app with the following commands
 rails new -c=bulma -d=postgresql
 ```
 
-`rails new` creates a new rails app. The flag `-c` stands for css, rails will use the framework Bulma to process the CSS and deliver it via the asset pipeline in rails. The flag `-d` stands for database, rails will use the postgresql database store data.
+`rails new` creates a new rails app. The flag `-c` stands for css, rails will use
+the framework Bulma to process the CSS and deliver it via the asset pipeline in
+rails. The flag `-d` stands for database, rails will use the postgresql database
+store data.
 
 ## We are building a reddit clone!
 
@@ -37,8 +43,10 @@ We will create a new branch and work on the link submission feature.
 git checkout -b feature/link_scaffold
 ```
 
-Using the command `git checkout` allows us to switch to a different branch on the repo. Using the flag
-`-b` creates a new branch and the last argument is the name if the new branch. If we tried to run `git checkout new_branch_name` we would return the following error.
+Using the command `git checkout` allows us to switch to a different branch on
+the repo. Using the flag `-b` creates a new branch and the last argument is the
+name if the new branch. If we tried to run `git checkout new_branch_name` we
+would return the following error.
 
 ```
 >> error: pathspec 'new_branch_name' did not match any file(s) known to git
@@ -66,9 +74,12 @@ Create a new link to test that everything is working.
 
 Excellent. Everything is functioning.
 
-Next we will commit our changes and merge our git branch into the git master branch:
+Next we will commit our changes and merge our git branch into the git master
+branch:
 
-Kill the server: `ctrl + c`. Then execute each git command individually in your terminal. Write it out rather than copy/paste; you’ll want to commit these commands to memory.
+Kill the server: `ctrl + c`. Then execute each git command individually in your
+terminal. Write it out rather than copy/paste; you’ll want to commit these
+commands to memory.
 
 ```
 git status
@@ -81,7 +92,8 @@ git push
 
 ## Creating Users
 
-By creating users, we will have the ability to sign-up, sign-in and sign-out. We will be using the devise gem to help us add user authentication into our app.
+By creating users, we will have the ability to sign-up, sign-in and sign-out. We
+will be using the devise gem to help us add user authentication into our app.
 
 First we are going to create a new branch in our github repository:
 
@@ -91,13 +103,15 @@ git checkout -b add_users
 
 “Switched to a new branch ‘add_users’
 
-Next, we will actually add the devise gem to our gemfile. Navigate to the Ruby devise gem page and copy the gemfile:
+Next, we will actually add the devise gem to our gemfile. Navigate to the Ruby
+devise gem page and copy the gemfile:
 
 ```
 gem 'devise', '~> 4.4', '>= 4.4.1'
 ```
 
-Open the gem file in your text editor, and add the above line of code into the gemfile.
+Open the gem file in your text editor, and add the above line of code into the
+gemfile.
 
 Run
 
@@ -124,7 +138,8 @@ config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
 Save the file.
 
-Second, add a root to your routes.rb file. I’m going to make the root the links index page:
+Second, add a root to your routes.rb file. I’m going to make the root the links
+index page:
 
 Before:
 
@@ -149,9 +164,11 @@ Restart the server and go to Got to http://localhost:3000/
 
 Awesome it worked!
 
-Third piece of the devise gem install: Ensure you have flash messages in `app/views/layouts/application.html.erb`.
+Third piece of the devise gem install: Ensure you have flash messages in
+`app/views/layouts/application.html.erb`.
 
-Mackenzie improvises a bit here, and uses some code that will work with the bootstrap code that we will add later. We’ll follow along with him.
+Mackenzie improvises a bit here, and uses some code that will work with the
+bootstrap code that we will add later. We’ll follow along with him.
 
 Add the following to app/views/layouts/application.html.erb:
 **NOTE** explain why we are doing this!!!
@@ -288,9 +305,13 @@ then
 git commit -m "Added devise gem and User model"
 ```
 
-Now we can sign in and out, but we need to update our view files so that we have some accessible links on the home page. We don’t want users to have to know to navigate to http://localhost:3000/sign_up do we?
+Now we can sign in and out, but we need to update our view files so that we have
+some accessible links on the home page. We don’t want users to have to know to
+navigate to http://localhost:3000/sign_up do we?
 
-Now, in our app/views/layouts/application.html.erb file, we are going to add a conditional statement to serve different links depending on whether the user is signed in or not:
+Now, in our app/views/layouts/application.html.erb file, we are going to add a
+conditional statement to serve different links depending on whether the user is
+signed in or not:
 
 ```ruby
 <% if user_signed_in? %>
@@ -373,7 +394,8 @@ Test to ensure you can logout.
 ---
 
 **NOTE:**
-Devise is configured to use the http method `:delete` to sign out. But when using the code from above specifically
+Devise is configured to use the http method `:delete` to sign out. But when
+using the code from above specifically
 
 ```ruby
 <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
@@ -394,7 +416,10 @@ git commit -m "added conditional statement to change view based on if a user is 
 git push
 ```
 
-Next we are going to create an associate between user and links to make sure that unregistered users can’t navigate to the url for submit link and submit a link. Because as it stands, a non-registered user could do that; they’d just need to know the url path.
+Next we are going to create an associate between user and links to make sure
+that unregistered users can’t navigate to the url for submit link and submit a
+link. Because as it stands, a non-registered user could do that; they’d just
+need to know the url path.
 
 Head to the user model at `app/models/user.rb` and add
 
@@ -464,9 +489,11 @@ Then let’s ask the console what user submitted this link:
 
 The console returns `=> nil`
 
-Without this association that we just made between users and links, we would have been shown an error message for the query `“@link.user”`
+Without this association that we just made between users and links, we would
+have been shown an error message for the query `“@link.user”`
 
-Don’t mistake `“nil”` for an error. This isn’t technically an error, it just means that we haven’t added a user column to our database. Let’s do that now.
+Don’t mistake `“nil”` for an error. This isn’t technically an error, it just
+means that we haven’t added a user column to our database. Let’s do that now.
 
 Exit the console with control + d.
 
@@ -526,7 +553,8 @@ then
 git commit -m "add association between link and user"
 ```
 
-Next, we are going to update our link controller so that when a user submits a link, their user id gets assigned to that link.
+Next, we are going to update our link controller so that when a user submits a
+link, their user id gets assigned to that link.
 
 We are going to update the new and create methods inside the `app/controller/links_controller.rb`
 
@@ -599,7 +627,8 @@ Then:
 @link = Link.last
 ```
 
-Great! user_id: 1 submitted this last link. That was me (you). Now let’s check in on user_id: 1
+Great! user_id: 1 submitted this last link. That was me (you). Now let’s check
+in on user_id: 1
 
 ```ruby
 @link.user
@@ -609,7 +638,8 @@ Cool. Everything is working.
 
 Authentication
 
-Now we will add some authentication to our control to make sure users stay within their lanes.
+Now we will add some authentication to our control to make sure users stay
+within their lanes.
 
 First, we will add a before filter to our `links_controller.rb:`
 
@@ -645,7 +675,8 @@ Hooray I was able to add a link and delete
 
 Moving on. Links are still showing even if we aren’t signed in. Let’s change that.
 
-Go to `app/views/links/index.html.erb`. We are going to wrap the ‘Edit’ path in an if block so that a user cannot see the edit path IF they are not signed in.
+Go to `app/views/links/index.html.erb`. We are going to wrap the ‘Edit’ path in
+an if block so that a user cannot see the edit path IF they are not signed in.
 
 That block of code will look like this:
 
@@ -837,7 +868,6 @@ So we are going to use what is called a partial view in
 
 ```ruby
 <%= render partial: "shared/navbar" %>
-
 ```
 
 Before:

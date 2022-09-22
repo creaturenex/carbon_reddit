@@ -1,7 +1,7 @@
-<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="<%= root_path %>" font-family: "Orbitron", sans-serif;>
-      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">Carbon Reddit
+    <a class="navbar-item" href="<%= root_path %>" >
+      <%= image_tag("carbon_reddit.png") %>
     </a>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -20,7 +20,7 @@
       <div class="navbar-item">
         <div class="buttons">
         <% if user_signed_in? -%>
-          <a class="button is-primary" href="<%= new_link_path %>" >
+          <a class="button is-dark" href="<%= new_link_path %>" >
             <strong>Submit Link</strong>
           </a>
           <a class="button is-light" href="<%= edit_user_registration_path %>">

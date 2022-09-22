@@ -1,10 +1,24 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @link %>
-
-<div>
-  <%= link_to "Edit this link", edit_link_path(@link) %> |
-  <%= link_to "Back to links", links_path %>
-
-  <%= button_to "Destroy this link", @link, method: :delete %>
+<div class="content">
+  <p style="color: green"><%= notice %></p>
+  <div class="box">
+    <h1>
+      <a href="<%= @link.url %>"><%= @link.title %></a>
+      <br>
+      <small>Submitted by <%= @link.user.email %></small>
+    </h1>
+    <div class="field is-grouped buttons are-small">
+      <p class="control">
+        <%= link_to "Visit", @link.url, class: "button is-link" %>
+      </p>
+      <%# Write in read me  the difference between linkto and button_to link = GET and button = POST%>
+      <% if @link.user == current_user %>
+          <p class="control">
+            <%= link_to "Edit", edit_link_path(@link), class: "button" %>
+          </p>
+          <p class="control">
+            <%= button_to "Delete", @link, method: :delete, class: "button is-danger" %>
+          </p>
+      <% end %>
+    </div>
+  </div>
 </div>

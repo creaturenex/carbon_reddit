@@ -1,8 +1,6 @@
 <div class="content">
   <p style="color: green"><%= notice %></p>
 
-  <h1>Links</h1>
-
   <% @links.each do |link| %>
     <div class="box">
       <h2><%= link_to link.title, link %></h2>

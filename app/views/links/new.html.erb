@@ -1,9 +1,10 @@
-<h1>New link</h1>
-
-<%= render "form", link: @link %>
-
-<br>
-
-<div>
-  <%= link_to "Back to links", links_path %>
+ <div class="content">
+ <%# This is adding a padding for the notice follow up on this %>
+  <p style="color: green"><%= notice %></p>
+  <div class="box">
+    <h1>New Link</h1>
+    <%= render "form", link: @link %>
+    <p></p>
+    <%= link_to "Back to links", links_path, class:"button" %>
+  </div>
 </div>

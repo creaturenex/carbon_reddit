@@ -1,44 +1,42 @@
-<nav class="navbar is-light" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="<%= root_path %>" >
-      <%= image_tag("carbon_reddit.png") %>
-    </a>
+<div data-controller="reveal">
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="<%= root_path %>" >
+        <%= image_tag("carbon_reddit.png") %>
+      </a>
 
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
-
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" data-action="click->reveal#toggleReveal">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-        <% if user_signed_in? -%>
-          <a class="button is-dark" href="<%= new_link_path %>" >
-            <strong>Submit Link</strong>
-          </a>
-          <a class="button is-light" href="<%= edit_user_registration_path %>">
-            Account
-          </a>
-          <a class="button is-light" href="<%= destroy_user_session_path %>">
-            Sign Out
-          </a>
-        <% else -%>
-          <a class="button is-primary" href="<%= new_user_registration_path %>" >
-            <strong>Sign Up</strong>
-          </a>
-          <a class="button is-light" href="<%= new_user_session_path %>">
-            Log In
-          </a>
-        <% end -%>
+    <div id="navbarBasicExample" class="navbar-menu" data-reveal-target="reveal">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+          <% if user_signed_in? -%>
+            <a class="button is-dark" href="<%= new_link_path %>" >
+              <strong>Submit Link</strong>
+            </a>
+            <a class="button is-light" href="<%= edit_user_registration_path %>">
+              Account
+            </a>
+            <a class="button is-light" href="<%= destroy_user_session_path %>">
+              Sign Out
+            </a>
+          <% else -%>
+            <a class="button is-primary" href="<%= new_user_registration_path %>" >
+              <strong>Sign Up</strong>
+            </a>
+            <a class="button is-light" href="<%= new_user_session_path %>">
+              Log In
+            </a>
+          <% end -%>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>

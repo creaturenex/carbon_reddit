@@ -852,6 +852,122 @@ git push
 
 Lovely. Now it’s time to add bootstrap and start styling a bit.
 
+## Stimulus, Add JavaScript via html
+
+Before we start, any new rails 7 projects is built with hotwire and stimulus.
+Stimulus allows us to use JavaScript in html elements. When we initialized the
+new rails app the assets might have been compiled in a way that prevents it from
+operating correctly. Try to use the included hello controller in
+`app/javascript/controllers/hello_controller.js`
+
+if it is not working run the command, this was discovered from this post https://discuss.hotwired.dev/t/stimulus-controllers-not-working-at-first-use-rails-7/4106
+
+```ruby
+rails assets:cobbler
+```
+
+cobbler removes the compiled assets
+
+```
+bin/dev
+```
+
+bin/dev rebuilds the assets
+
+Now lets build a toggle controller using stimulus!
+
+Using the built in stimulus generator type the following to create a new stimulus
+controller.
+
+`./bin/rails generate stimulus navbar_toggle`
+
+This also imports the navbar-toggle-controller to the `app/javascript/controllers/index.js` to be used by the rails app.It should look like this.
+
+before
+
+```javascript
+import { application } from "./application";
+
+import HelloController from "./hello_controller";
+application.register("hello", HelloController);
+```
+
+after
+
+```javascript
+import { application } from "./application";
+
+import HelloController from "./hello_controller";
+application.register("hello", HelloController);
+
+import NavbarToggleController from "./navbar_toggle_controller";
+application.register("navbar-toggle", NavbarToggleController);
+```
+
+### A toggle stimulus controller
+
+This was built using the following
+https://michael.minton.io/2018/06/modern-rails-with-webpacker-and-stimulus.html
+
+Inside of the file `app/javascript/controllers/navbar_toggle_controller.js`
+
+Add the following
+
+```javascript
+import { Controller } from "@hotwired/stimulus";
+
+// Connects to data-controller="navbar-toggle"
+export default class extends Controller {
+  connect() {
+    // Get all "navbar-burger" elements
+    var $navbarBurgers = Array.prototype.slice.call(
+      document.querySelectorAll(".navbar-burger"),
+      0
+    );
+
+    // Check if there are any navbar burgers
+    if ($navbarBurgers.length > 0) {
+      // Add a click event on each of them
+      $navbarBurgers.forEach(function ($el) {
+        $el.addEventListener("click", function () {
+          // Get the target from the "data-target" attribute
+          var target = $el.dataset.target;
+          var $target = document.getElementById(target);
+
+          // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+          $el.classList.toggle("is-active");
+          $target.classList.toggle("is-active");
+        });
+      });
+    }
+  }
+}
+```
+
+Now lets add the data-controller attribute to the body
+element in `app/views/layouts/application.html.erb`
+
+```
+<body data-controller="navbar-toggle">
+```
+
+now lets rebuild the asset with
+
+```
+rails assets:cobbler
+bin/dev
+```
+
+### Testing
+
+Run your rails app in a full screen window so that you can see the navbar up top
+
+<!-- show the image of navbar -->
+
+now shrink the window so the navbar disappears and the navbar burger menu appears.
+
+<!-- show image of burger menu -->
+
 ## Styling
 
 When we created the new rails app with the flag `rails new app_name -c=bulma`

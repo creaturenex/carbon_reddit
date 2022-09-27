@@ -7,5 +7,5 @@ import { application } from "./application";
 import HelloController from "./hello_controller";
 application.register("hello", HelloController);
 
-import RevealController from "./reveal_controller";
-application.register("reveal", RevealController);
+import NavbarToggleController from "./navbar_toggle_controller";
+application.register("navbar-toggle", NavbarToggleController);

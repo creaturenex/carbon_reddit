@@ -966,7 +966,16 @@ Run your rails app in a full screen window so that you can see the navbar up top
 
 now shrink the window so the navbar disappears and the navbar burger menu appears.
 
+Click the burger and you should see the menus reappear
+
 <!-- show image of burger menu -->
+
+git status
+git add .
+git commit -m "generated link scaffold"
+git checkout main
+git merge feature/link_scaffold
+git push
 
 ## Styling
 

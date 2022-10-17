@@ -9,14 +9,14 @@
       <div class="field">
         <%= f.label :email, class:"label" %>
         <div class="control">
-          <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input" %>
         </div>
       </div>
 
       <div class="field">
         <%= f.label :password, class:"label"%>
         <div class="control">
-          <%= f.password_field :password, autocomplete: "new-password" %>
+          <%= f.password_field :password, autocomplete: "new-password", class:"input "%>
         </div>
         <% if @minimum_password_length %>
           <p class="help"><em>(<%= @minimum_password_length %> characters minimum)</em><p>
@@ -26,7 +26,7 @@
       <div class="field">
         <%= f.label :password_confirmation, class:"label"%>
         <div class="control">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"input" %>
         </div>
       </div>
 
@@ -36,6 +36,7 @@
         </div>
       </div>
     <% end %>
+
     <p></p>
     <%= render "devise/shared/links" %>
   </div>

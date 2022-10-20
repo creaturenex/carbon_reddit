@@ -1081,7 +1081,7 @@ bulma
 
 The navbar toggle function should be working due to the data-controller tag added added to the application.html.erb view.
 
-Next we going to the style the `app/views/links/index.html.erb` view
+Next we are going to the style the `app/views/links/index.html.erb` view
 
 replace it with the following
 
@@ -1091,14 +1091,36 @@ replace it with the following
 
   <% @links.each do |link| %>
     <div class="box">
-      <h2><%= link_to link.title, link %></h2>
-      <small class="author">Submitted <%= time_ago_in_words(link.created_at) %>
-      by <%= link.user.email %></small>
+      <p class="title"><%= link_to link.title, link %></p>
+      <p class="subtitle">Submitted <%= time_ago_in_words(link.created_at) %>
+      by <%= link.user.email %></p>
     </div>
   <% end %>
 
 </div>
+```
 
+Next we are going to style the `app/views/links/show.html.erb` view
+
+replace it with the following
+
+```erb
+<div class="content">
+  <p style="color: green"><%= notice %></p>
+  <div class="box">
+    <p class="title" href="<%= @link.url %>"><%= @link.title %></p>
+    <p class="subtitle">Submitted by <%= @link.user.email %></p>
+
+    <div class="field is-grouped buttons are-small">
+      <div class="control"><%= link_to "Visit", @link.url, class: "button is-link" %></div>
+      <%# Write in read me  the difference between linkto and button_to link = GET and button = POST%>
+      <% if @link.user == current_user %>
+        <div class="control"><%= link_to "Edit", edit_link_path(@link), class: "button" %></div>
+        <div class="control"><%= button_to "Delete", @link, method: :delete, class: "button is-danger" %></div>
+      <% end %>
+    </div>
+  </div>
+</div>
 ```
 
 xxxxxxxxxxxxxx

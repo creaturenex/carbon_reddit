@@ -1062,8 +1062,10 @@ Inside the `\_navbar.html.erb` paste the following
 
 This code was modified from the navbar example provided by [Bulma](https://bulma.io/documentation/components/navbar/#basic-navbar)
 
-Couple of notes
-For the navbar logo, we used the rails way to reference the source image. Also we used our own image located in `app/assets/images/carbon_reddit.png`
+**NOTES**
+
+First, For the navbar logo, we used the rails way to reference the source image. Also we used our own image located in `app/assets/images/carbon_reddit.png`
+
 rails
 
 ```
@@ -1075,6 +1077,28 @@ bulma
 
 ```
 <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+```
+
+The navbar toggle function should be working due to the data-controller tag added added to the application.html.erb view.
+
+Next we going to the style the `app/views/links/index.html.erb` view
+
+replace it with the following
+
+```erb
+<div class="content">
+  <p style="color: green"><%= notice %></p>
+
+  <% @links.each do |link| %>
+    <div class="box">
+      <h2><%= link_to link.title, link %></h2>
+      <small class="author">Submitted <%= time_ago_in_words(link.created_at) %>
+      by <%= link.user.email %></small>
+    </div>
+  <% end %>
+
+</div>
+
 ```
 
 xxxxxxxxxxxxxx

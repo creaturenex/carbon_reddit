@@ -3,9 +3,9 @@
 
   <% @links.each do |link| %>
     <div class="box">
-      <h2><%= link_to link.title, link %></h2>
-      <small class="author">Submitted <%= time_ago_in_words(link.created_at) %>
-      by <%= link.user.email %></small>
+      <p class="title"><%= link_to link.title, link %></p>
+      <p class="subtitle">Submitted <%= time_ago_in_words(link.created_at) %>
+      by <%= link.user.email %></p>
     </div>
   <% end %>
 

@@ -1017,6 +1017,68 @@ this denotes a partial view.
 
 Inside the `\_navbar.html.erb` paste the following
 
+```ruby
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="<%= root_path %>" >
+      <%= image_tag("carbon_reddit.png") %>
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+        <% if user_signed_in? -%>
+          <a class="button is-dark" href="<%= new_link_path %>" >
+            <strong>Submit Link</strong>
+          </a>
+          <a class="button is-light" href="<%= edit_user_registration_path %>">
+            Account
+          </a>
+          <a class="button is-light" href="<%= destroy_user_session_path %>">
+            Sign Out
+          </a>
+        <% else -%>
+          <a class="button is-primary" href="<%= new_user_registration_path %>" >
+            <strong>Sign Up</strong>
+          </a>
+          <a class="button is-light" href="<%= new_user_session_path %>">
+            Log In
+          </a>
+        <% end -%>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+```
+
+This code was modified from the navbar example provided by [Bulma](https://bulma.io/documentation/components/navbar/#basic-navbar)
+
+Couple of notes
+For the navbar logo, we used the rails way to reference the source image. Also we used our own image located in `app/assets/images/carbon_reddit.png`
+rails
+
+```
+<%= image_tag("carbon_reddit.png") %>
+```
+
+vs.
+bulma
+
+```
+<img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+```
+
+xxxxxxxxxxxxxx
+
 We are using this format over conventional rails
 
 `<li><%= link_to 'Sign up', new_user_registration_path %></li>`

@@ -1113,7 +1113,6 @@ replace it with the following
 
     <div class="field is-grouped buttons are-small">
       <div class="control"><%= link_to "Visit", @link.url, class: "button is-link" %></div>
-      <%# Write in read me  the difference between linkto and button_to link = GET and button = POST%>
       <% if @link.user == current_user %>
         <div class="control"><%= link_to "Edit", edit_link_path(@link), class: "button" %></div>
         <div class="control"><%= button_to "Delete", @link, method: :delete, class: "button is-danger" %></div>
@@ -1123,12 +1122,210 @@ replace it with the following
 </div>
 ```
 
-xxxxxxxxxxxxxx
+We are using link_to because it submits a request via a GET, but we style it using class: "button" to look like a button rather than a link. The button_to submits a request via POST which is not the behavior we want.
 
-We are using this format over conventional rails
+Next we are going to style the new link view by styling the form view \_form.html.erb
 
-`<li><%= link_to 'Sign up', new_user_registration_path %></li>`
+replace it with the following
 
-because bulma is not styling the link like we want it to look like
+```erb
+<%= form_with(model: link) do |form| %>
+  <% if link.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(link.errors.count, "error") %>prohibited this link from being saved:</h2>
 
-`<a class="button is-primary" href="<%= new_link_path %>" >`
+      <ul>
+        <% link.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title, class: "label"%>
+    <div class="control">
+      <%= form.text_field :title, class:"input", placeholder:"Text input"%>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :url, class: "label"%>
+    <div class="control">
+      <%= form.text_field :url, class:"input is-link", placeholder:"Text input"%>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="control">
+      <%= form.submit class:"button is-link"%>
+    </div>
+  </div>
+<% end %>
+```
+
+Next we are going to style the edit user view at `app/views/devise/registrations/edit.html.erb`
+
+replace it with the following
+```erb
+<div class="content">
+  <p></p>
+  <div class="box">
+    <h2>Edit <%= resource_name.to_s.humanize %></h2>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="field">
+        <%= f.label :email, class: "label" %>
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input" %>
+        </div>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :password, class: "label"%>
+        <div class="control">
+        <%= f.password_field :password, autocomplete: "new-password", class:"input" %>
+        <% if @minimum_password_length %>
+          <p class="help"><%= @minimum_password_length %> characters minimum</p>
+        <% end %>
+        </div>
+        <p class="help">(leave blank if you don't want to change it)</p>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, class: "label" %>
+        <div class="control">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"input" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :current_password, class:"label" %>
+        <div class="control">
+          <%= f.password_field :current_password, autocomplete: "current-password", class:"input" %>
+        </div>
+        <p class="help">(we need your current password to confirm your changes)</p>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <%= f.submit "Update", class:"button is-link"%>
+        </div>
+      </div>
+
+    <% end %>
+    <p></p>
+    <div class="field">
+      <div class="control">
+        <%= button_to "Cancel Account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class:"button is-danger" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <%= link_to "Back", :back, class: "button" %>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+
+Next we are going to style the new user view `app/views/devise/registrations/new.html.erb`
+
+replace it with
+```erb
+<div class="content">
+  <p></p>
+  <div class="box">
+    <h2>Sign up</h2>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="field">
+        <%= f.label :email, class:"label" %>
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :password, class:"label"%>
+        <div class="control">
+          <%= f.password_field :password, autocomplete: "new-password", class:"input "%>
+        </div>
+        <% if @minimum_password_length %>
+          <p class="help"><em>(<%= @minimum_password_length %> characters minimum)</em><p>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, class:"label"%>
+        <div class="control">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"input" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <%= f.submit "Sign up", class:"button is-link"%>
+        </div>
+      </div>
+    <% end %>
+
+    <p></p>
+    <%= render "devise/shared/links" %>
+  </div>
+</div>
+```
+
+
+Next we will syle the login in view
+
+```erb
+<div class="content">
+  <p></p>
+  <div class="box">
+    <h2>Log in</h2>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="field">
+        <%= f.label :email, class:"label" %>
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input" %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.label :password, class:"label" %>
+        <div class="control">
+          <%= f.password_field :password, autocomplete: "current-password", class:"input" %>
+        </div>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="field">
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me %>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <div class="control">
+          <%= f.submit "Log in", class:"button is-link"%>
+        </div>
+      </div>
+    <% end %>
+
+    <p></p>
+    <%= render "devise/shared/links" %>
+  </div>
+</div>
+```

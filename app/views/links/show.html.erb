@@ -6,7 +6,6 @@
 
     <div class="field is-grouped buttons are-small">
       <div class="control"><%= link_to "Visit", @link.url, class: "button is-link" %></div>
-      <%# Write in read me  the difference between linkto and button_to link = GET and button = POST%>
       <% if @link.user == current_user %>
         <div class="control"><%= link_to "Edit", edit_link_path(@link), class: "button" %></div>
         <div class="control"><%= button_to "Delete", @link, method: :delete, class: "button is-danger" %></div>

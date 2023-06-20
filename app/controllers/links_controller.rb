@@ -1,6 +1,6 @@
 class LinksController < ApplicationController
   before_action :set_link, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!, except: %i[ index, show ] # When did this format change? from [:index] to %i [index]?
+  before_action :authenticate_user!, except: %i[ index show ] # When did this format change? from [:index] to %i [index]?
 
   # GET /links or /links.json
   def index
